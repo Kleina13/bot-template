@@ -5,6 +5,7 @@ import discord
 from colorama import init, Style
 from colors import color # setup the colors in colors.py [ ]
 
+
 client = discord.Client()
 init(autoreset=True)
 TOKEN = open('token.txt', 'r').read() # input token [ ]
@@ -23,6 +24,8 @@ async def on_ready():
 @client.event
 async def on_connect():
     print(f"{color[1] + Style.BRIGHT}bot is connected to discord ~")
+    activity = discord.Activity(name=f'{prefix}help', type=discord.ActivityType.watching)
+    await client.change_presence(activity=activity)
 
 @client.event
 async def on_disconnect():
@@ -30,9 +33,12 @@ async def on_disconnect():
 
 @client.event
 async def on_message(message):
-    if message.content == (f'{prefix}ping'):
+    if message.content.lower() == (f'{prefix}ping'):
         print(f"{color[0] + Style.BRIGHT + message.author.name + Style.NORMAL + color[0]} pinged the bot.")
         await message.channel.send("pong")
+    elif message.content.lower() == (f'{prefix}help'):
+        print(f"{color[0] + Style.BRIGHT + message.author.name + Style.NORMAL + color[0]} asked for help.")
+        await message.channel.send("HELP!")
 
 client.run(TOKEN)
 TOKEN.close()
